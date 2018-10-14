@@ -10,7 +10,7 @@ LABEL Maintainer="Michael <greennyreborn@gmail.com>" \
       org.label-schema.name="greenny/php72-swoole" \
       org.label-schema.description="Lightweight php 7.2 container based on alpine with Composer installed and swoole 4.2.1 installed." \
       org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.version="1.0.0" \
+      org.label-schema.version="1.2.3" \
       org.label-schema.vcs-url="https://github.com/greennyreborn/php72-swoole.git" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.docker.schema-version="1.0"
@@ -37,7 +37,8 @@ RUN set -ex \
     && docker-php-ext-enable swoole \
     # install composer
     && curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    $$ composer config -g repo.packagist composer https://packagist.phpcomposer.com \
+    && composer config -g repo.packagist composer https://packagist.laravel-china.org \
+    && composer self-update \
     # clean up
     && cd  / && rm -fr /src \
     && apk del build-dependencies \
