@@ -29,16 +29,16 @@ RUN set -ex \
     && cd /tmp/hiredis-0.14.0 \
     && make -j && make install \
     # install swoole
-    && wget --no-check-certificate -O /tmp/swoole.gzip https://github.com/swoole/swoole-src/archive/v4.2.1.zip \
+    && swoole_version=4.2.3 \
+    && wget --no-check-certificate -O /tmp/swoole.gzip https://github.com/swoole/swoole-src/archive/v${swoole_version}.zip \
     && unzip /tmp/swoole.gzip -d /tmp \
-    && cd /tmp/swoole-src-4.2.1 \
+    && cd /tmp/swoole-src-${swoole_version} \
     && phpize && ./configure --enable-sockets --enable-async-redis \
     && make && make install \
     && docker-php-ext-enable swoole \
     # install composer
     && curl -sS https://install.phpcomposer.com/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer config -g repo.packagist composer https://packagist.laravel-china.org \
-    && composer self-update \
     # clean up
     && cd  / && rm -fr /src \
     && apk del build-dependencies \
