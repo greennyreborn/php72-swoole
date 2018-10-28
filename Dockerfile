@@ -2,13 +2,15 @@ FROM php:7-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
+ARG SWOOLE_TAG
+ARG DESC
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 LABEL Maintainer="Michael <greennyreborn@gmail.com>" \
-      Description="Lightweight php 7.2 container based on alpine with Composer installed and swoole 4.2.1 installed." \
+      Description=$DESC \
       org.label-schema.name="greenny/php72-swoole" \
-      org.label-schema.description="Lightweight php 7.2 container based on alpine with Composer installed and swoole 4.2.1 installed." \
+      org.label-schema.description=$DESC \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version="1.2.3" \
       org.label-schema.vcs-url="https://github.com/greennyreborn/php72-swoole.git" \
@@ -29,7 +31,7 @@ RUN set -ex \
     && cd /tmp/hiredis-0.14.0 \
     && make -j && make install \
     # install swoole
-    && swoole_version=4.2.3 \
+    && swoole_version=$SWOOLE_TAG \
     && wget --no-check-certificate -O /tmp/swoole.gzip https://github.com/swoole/swoole-src/archive/v${swoole_version}.zip \
     && unzip /tmp/swoole.gzip -d /tmp \
     && cd /tmp/swoole-src-${swoole_version} \
