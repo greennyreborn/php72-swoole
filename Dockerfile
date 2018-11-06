@@ -20,22 +20,18 @@ LABEL Maintainer="Michael <greennyreborn@gmail.com>" \
 RUN set -ex \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
   	&& apk update \
+  	&& apk add --no-cache iptables \
     && apk add --no-cache curl icu libpng libjpeg-turbo libffi-dev \
     && apk add --no-cache --virtual build-dependencies icu-dev libxml2-dev libpng-dev libjpeg-turbo-dev g++ make autoconf \
     && docker-php-source extract \
     && docker-php-ext-install sockets pdo_mysql \
     && docker-php-source delete \
-    # install hiredis
-    && wget --no-check-certificate -O /tmp/hiredis.gzip https://github.com/redis/hiredis/archive/v0.14.0.zip \
-    && unzip /tmp/hiredis.gzip -d /tmp \
-    && cd /tmp/hiredis-0.14.0 \
-    && make -j && make install \
     # install swoole
     && swoole_version=$SWOOLE_TAG \
     && wget --no-check-certificate -O /tmp/swoole.gzip https://github.com/swoole/swoole-src/archive/v${swoole_version}.zip \
     && unzip /tmp/swoole.gzip -d /tmp \
     && cd /tmp/swoole-src-${swoole_version} \
-    && phpize && ./configure --enable-sockets --enable-async-redis \
+    && phpize && ./configure --enable-sockets \
     && make && make install \
     && docker-php-ext-enable swoole \
     # install composer
@@ -44,7 +40,7 @@ RUN set -ex \
     # clean up
     && cd  / && rm -fr /src \
     && apk del build-dependencies \
-    && rm -rf /tmp/* 
+    && rm -rf /tmp/*
 
 USER www-data
 
